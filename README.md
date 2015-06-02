@@ -173,7 +173,7 @@ Runs should be executed in an automated fashion by the script `2_run_tree`. Unfo
 
 ### Calculation of nuclide specific outputs ###
 
-This step reads FLEXPART output for unit releases and calculates actual concentration and deposition fields of different nuclides including radioactive decay. The methodology of computing radioactive decay under assumption of constant concentration and deposition within a given time step is described in this [ipython notebook](http://nbviewer.ipython.org/url/bitbucket.org/radekhofman/quickdose/raw/master/Materials/rad_postproc.ipynb).
+This step reads FLEXPART output for unit releases and calculates actual concentration and deposition fields of different nuclides including radioactive decay. The methodology of computing radioactive decay under assumption of constant concentration and deposition within a given time step is described in this [ipython notebook](http://nbviewer.ipython.org/url/bitbucket.org/radekhofman/quickdose/raw/master/Materials/rad_postproc.ipynb). Decayed products (concentration and deposition fields are stored in `CLOUDSHINE_DIR` and `DEPOSITION_DIR`). Each nuclide has a separate `nuclide_name.mat` file of dimensions `(time_step, dimx, dimy, dimz)` for concentration and `(time_step, dimx, dimy)` for deposition.
 
 ### Calculation of doses ###
 
