@@ -4,6 +4,8 @@ Author: Radek Hofman
 
 QuickDose is a set of tools for written in [Python](http://www.python.org) producing radiological outputs with Langrangian particle dispersion model [FLEXPART](http://flexpart.eu). QuickDose was inspired by [flexRISK](http://flexrisk.boku.ac.at/) project. Output of QuickDose can be something like [this simulated release](http://stradi.utia.cas.cz/temelin/) from NPP Temelin.
 
+![quickdose.png](https://bitbucket.org/repo/A9EgjE/images/3747294764-quickdose.png)
+
 The project is under development. Currently it has following features:
 
 * Prepares a set of FLEXPART runs corresponding with a given source term needed for dose calculation
