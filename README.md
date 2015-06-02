@@ -1,5 +1,7 @@
 # QuickLook (beta)#
 
+Author: Radek Hofman
+
 QuickDose is a set of tools for written in [Python](http://www.python.org) producing radiological outputs with Langrangian particle dispersion model [FLEXPART](http://flexpart.eu). QuickDose was inspired by [flexRISK](http://flexrisk.boku.ac.at/) project. Output of QuickDose can be something like [this simulated release](http://stradi.utia.cas.cz/temelin/) from NPP Temelin.
 
 The project is under development. Currently it has following features:
@@ -32,11 +34,11 @@ Everything start by creating a configuration file for a dose calculation project
 
 Firstly, you have to configure input and output paths. The most important is to set `TREE_PATH` containing all projects. All output paths are then relative to this one and should work well in default setting. What regards input paths, you have to set variables `METEO_PATH` and `AVAILABLE` containing meteorological fields and the `AVAILABLE` file. The you have to configure location and name of FLEXPART binary using variables `FLEXPART_PATH` and `FLEXPART_NAME`.
 
-### Preparing FLEXPART runs ###
+### Preparing QuickDose project ###
 
 To be able to apply radiological post-processing to FLEXPART output we need a separate source-receptor sensitivity field for each elemental release. To accmplish so, there is a separate FLEXPART run for each release in QuickLook. This so called run tree is constructed automatically given a `SOURCE_TERM` in `rad_decay.py`.
 
-#### Source term ####
+#### Source term definition ####
 
 Source term is a JSON structure defining all essential aspects of the release. A samples source term can look like this:
 
@@ -112,7 +114,58 @@ SOURCE_TERM = {
     }
 ```
 
-It contains 4 elemental releases in two phases of length `time_step` in seconds. In each phase we release nuclides from sources 0-50 and 50-200 meters. We release three nuclides: `Cs-137, I-131, Xe-133`. Neither number of phases nor nuclides is not limited. Just note that in all phases we have to define all nuclides even if their release is zero (as in the case of `Xe-133` in the second phase). Besides the magnitude, we define also a species type of respective nuclides. `SOURCE_TERM` entry `"species_dict": {1: 1, 2: 16}` defines which species in `SOURCE_TERM`corresponds to which species in FLEXPART. Number 1 corresponds to FLEPXART species 1 (an air tracer with no deposition and thus suitable for noble gases) and number 2 corresponds to number 16 in FLEXPART which is an aerosol. All species definitions in FLEXPART can be found in `FLEXPART/Option/SPECIES`.
+It contains 4 elemental releases in two phases of length `time_step` in seconds. In each phase we release nuclides from sources 0-50 and 50-200 meters. Generally, the structure of `sources` is as follows:
+
+```
+sources = [
+   [phase_1_release_1, phase_1_release_2,..., phase_1_release_N1],
+    ...
+   [phase_M_release_1, phase_M_release_2,...,phase_M_release_NM]
+]
+```
+
+All release phases must have the same duration `time_step`. It is clear that a release of any complexity can be transformed into this "canonical" form given a sufficiently short `time_step`.
+
+We release three nuclides: `Cs-137, I-131, Xe-133`. Neither number of phases nor nuclides is not limited. Just note that in all phases we have to define all nuclides even if their release is zero (as in the case of `Xe-133` in the second phase). Besides the overal magnitude for each phase (Bq), we define also a species type of respective nuclides. `SOURCE_TERM` entry 
+
+```python 
+"species_dict": {1: 1, 2: 16}
+```
+
+defines which species in `SOURCE_TERM`corresponds to which species in FLEXPART. Number 1 corresponds to FLEPXART species 1 (an air tracer with no deposition and thus suitable for noble gases) and number 2 corresponds to number 16 in FLEXPART which is an aerosol. All species definitions in FLEXPART can be found in `FLEXPART/Option/SPECIES`. 
+
+Decay chains can be also defined. `SOURCE_TERM` entry 
+
+```python
+    "decay_chains" : {
+            "I-131": ("Xe-131m", 1.0),
+            },
+```
+
+tells us that we assume decay chain `I-131 -> Xe-131m` with fraction `1.0`. Please note, that in theses cases when a particulate decays to noble gas, the noble gas contribution from deposition is ignored! This could be properly handles only "on the flow" during a FLEXPART run, not in post-processing.
+
+Number of decay chains is not limited. The only condition, similarly to definition of inventories, is that both parent and daughter nuclides must have their corresponding entries in nuclide database contained in `Src/mods/coefficients/nuclide_data.py`. It is a JSON containing for each nuclides its half-life, inhalation dose conversion coefficients for 5 age groups, cloudshine and groundshine conversion coefficients:
+
+```python
+#breathing rates 3m, 1y, 5y, 10y, 15y and adults(> 17 years) in m3/day
+breathing_rates = (2.86, 5.16, 8.72, 15.3, 20.1, 22.2)
+
+d = {
+#particulates
+'Sb-122': {'halflife': 233280.0, 'inhalation': (8.3e-09, 5.7e-09, 2.8e-09, 1.8e-09, 1.3e-09, 1e-09), 'cloud': 2.02e-14, 'ground': 4.85e-16},
+'Sb-124': {'halflife': 5201280.0, 'inhalation': (3.1e-08, 2.4e-08, 1.4e-08, 9.6e-09, 7.7e-09, 6.4e-09), 'cloud': 8.62e-14, 'ground': 1.7e-15},
+'Sb-125': {'halflife': 87354720.0, 'inhalation': (2e-08, 1.6e-08, 1e-08, 6.8e-09, 5.8e-09, 4.8e-09), 'cloud': 1.87e-14, 'ground': 4.09e-16},
+'Te-132': {'halflife': 281664.0, 'inhalation': (1.6e-08, 1.3e-08, 6.4e-09, 4e-09, 2.6e-09, 2e-09), 'cloud': 1.17e-13, 'ground': 2.47e-15},
+...}
+```
+
+Age groups are as follows: `0-1y, 1-2y, 2-7y, 7y-12y, 12-17y, adults`.
+
+What remains is to put other FLEXPART inputs and templates for special files into directories defined by variables `STATIC` and `TEMPLATES` (this should be OK in default settings).
+
+#### Making a run tree ####
+
+
 #### Executing runs ####
 
 ### Calculation of doses ###
