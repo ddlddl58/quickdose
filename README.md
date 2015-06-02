@@ -165,18 +165,40 @@ What remains is to put other FLEXPART inputs and templates for special files int
 
 #### Making a run tree ####
 
-Run tree is automatically created by running a script `1_make_tree.py` in `TREE_PATH/RUN`. The naming convention for runs of elemental releases is: `R_t=dddd_id=dddd`, where `t` is phase number and `id` is source term number in phase `t`.
+Run tree is automatically created by running a script `Src/1_make_tree.py` in `TREE_PATH/RUN`. The naming convention for runs of elemental releases is: `R_t=dddd_id=dddd`, where `t` is phase number and `id` is source term number in phase `t`.
 
 #### Executing runs ####
 
-Runs should be executed in an automated fashion by the script `2_run_tree`. Unfortunately, this is not implemented yet so the runs must be executed manually or using a tool like [sbatch](https://computing.llnl.gov/linux/slurm/sbatch.html) or similar.
+Runs should be executed in an automated fashion by the script `Src/2_run_tree.py`. Unfortunately, this is not implemented yet so the runs must be executed manually or using a tool like [sbatch](https://computing.llnl.gov/linux/slurm/sbatch.html) or similar.
 
 ### Calculation of nuclide specific outputs ###
 
-This step reads FLEXPART output for unit releases and calculates actual concentration and deposition fields of different nuclides including radioactive decay. The methodology of computing radioactive decay under assumption of constant concentration and deposition within a given time step is described in this [ipython notebook](http://nbviewer.ipython.org/url/bitbucket.org/radekhofman/quickdose/raw/master/Materials/rad_postproc.ipynb). Decayed products (concentration and deposition fields are stored in `CLOUDSHINE_DIR` and `DEPOSITION_DIR`). Each nuclide has a separate `nuclide_name.mat` file of dimensions `(time_step, dimx, dimy, dimz)` for concentration and `(time_step, dimx, dimy)` for deposition.
+This step reads FLEXPART output for unit releases and calculates actual concentration and deposition fields of different nuclides including radioactive decay. The methodology of computing radioactive decay under assumption of constant concentration and deposition within a given time step is described in this [ipython notebook](http://nbviewer.ipython.org/url/bitbucket.org/radekhofman/quickdose/raw/master/Materials/rad_postproc.ipynb). Decayed products (concentration and deposition fields are stored in directories defined by variable `CLOUDSHINE_DIR` and `DEPOSITION_DIR`). Each nuclide has a separate `nuclide_name.mat` file of dimensions `(time_step, dimx, dimy, dimz)` for concentration and `(time_step, dimx, dimy)` for deposition. To do this, simply run `Src/3_calculate_decay.py`
 
 ### Calculation of doses ###
 
-When all runs are finished, we can a
+When all runs are finished, we can calculate doses. Currently, following is calculated:
 
-### Plotting results ###
+* External gamma dose rate due to cloudshine (Sv/s) (results in directory defined by `CLOUDSHINE_DIR`)
+* External gamma dose rate due to deposition (Sv/s) (results in directory defined by `GROUNDSHINE_DIR`)
+* Internal irradiation due to inhalation (Sv/s) (results in directory defined by `INHALATION_DIR`)
+* Dose rate from all pathways (Sv/s) (results in directory defined by `ALL_PATHWAYS_DIR`)
+
+Each nuclide has again its separate `nuclide_name.mat` file of dimensions `(time_step, dimx, dimy)`. There is also a file `all_nuclides.mat` where a sum over nuclides is stored. 
+
+To calculate doses we run script `Src/4_calculate_radiological_quantities.py`
+
+### Plotting results and other processing ###
+
+Finally, we can plot results. Plotting has its own configuration file derived from project [QuickLook](https://bitbucket.org/radekhofman/quicklook) called `plt_config.py`. Please look inside and see what can be configured. In default settings, by running script `Src/5_make_plots.py` we obtain figures for each frame of each nuclide, which could be quite high number of figures:) Instead of plotting, the results can be integrated to obtain doses etc.
+
+## Plans ##
+
+* Implementation of doses (time integrals of GDR)
+* Introduce dose shielding factors etc.
+* Broaden nuclide library
+* De-bug everything :)
+
+## Final warning ##
+
+This is a beta version and it is quite likely, that there are bugs.
