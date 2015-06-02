@@ -203,4 +203,4 @@ Finally, we can plot results. Plotting has its own configuration file derived fr
 
 ## Final warning ##
 
-This is a beta version and it is quite likely, that there are bugs.
+This is a beta version and it is quite likely that there are more or less severe bugs. If you find such a bug, I would be grateful if you create an issue on it [here](https://bitbucket.org/radekhofman/quickdose/issues?status=new&status=open).
