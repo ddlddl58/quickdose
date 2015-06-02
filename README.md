@@ -173,7 +173,7 @@ Runs should be executed in an automated fashion by the script `2_run_tree`. Unfo
 
 ### Calculation of nuclide specific outputs ###
 
-This step reads FLEXPART output for unit releases and calculates actual concentration and deposition fields of different nuclides including radioactive decay. The methodology of computing radioactive decay under assumption of constant concentra
+This step reads FLEXPART output for unit releases and calculates actual concentration and deposition fields of different nuclides including radioactive decay. The methodology of computing radioactive decay under assumption of constant concentration and deposition within a given time step is described in this [ipython notebook]().
 
 ### Calculation of doses ###
 
