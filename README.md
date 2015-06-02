@@ -159,7 +159,7 @@ d = {
 ...}
 ```
 
-Age groups are as follows: `0-1y, 1-2y, 2-7y, 7y-12y, 12-17y, adults`.
+Age groups are as follows: `(0-1y, 1-2y, 2-7y, 7y-12y, 12-17y, adults)`.
 
 What remains is to put other FLEXPART inputs and templates for special files into directories defined by variables `STATIC` and `TEMPLATES` (this should be OK in default settings).
 
@@ -169,6 +169,14 @@ Run tree is automatically created by running a script `1_make_tree.py` in `TREE_
 
 #### Executing runs ####
 
+Runs should be executed in an automated fashion by the script `2_run_tree`. Unfortunately, this is not implemented yet so the runs must be executed manually or using a tool like [sbatch](https://computing.llnl.gov/linux/slurm/sbatch.html) or similar.
+
+### Calculation of nuclide specific outputs ###
+
+This step reads FLEXPART output for unit releases and calculates actual concentration and deposition fields of different nuclides including radioactive decay. The methodology of computing radioactive decay under assumption of constant concentra
+
 ### Calculation of doses ###
+
+When all runs are finished, we can a
 
 ### Plotting results ###
