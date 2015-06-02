@@ -165,6 +165,7 @@ What remains is to put other FLEXPART inputs and templates for special files int
 
 #### Making a run tree ####
 
+Run tree is automatically created by running a script `1_make_tree.py` in `TREE_PATH/RUN`. The naming convention for runs of elemental releases is: `R_t=dddd_id=dddd`, where `t` is phase number and `id` is source term number in phase `t`.
 
 #### Executing runs ####
 
