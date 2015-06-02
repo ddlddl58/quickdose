@@ -112,6 +112,7 @@ SOURCE_TERM = {
     }
 ```
 
+It contains 4 elemental releases in two phases of length `time_step` in seconds. In each phase we release nuclides from sources 0-50 and 50-200 meters. We release three nuclides: `Cs-137, I-131, Xe-133`. Neither number of phases nor nuclides is not limited. Just note that in all phases we have to define all nuclides even if their release is zero (as in the case of `Xe-133` in the second phase). Besides the magnitude, we define also a species type of respective nuclides. `SOURCE_TERM` entry `"species_dict": {1: 1, 2: 16}` defines which species in `SOURCE_TERM`corresponds to which species in FLEXPART. Number 1 corresponds to FLEPXART species 1 (an air tracer with no deposition and thus suitable for noble gases) and number 2 corresponds to number 16 in FLEXPART which is an aerosol. All species definitions in FLEXPART can be found in `FLEXPART/Option/SPECIES`.
 #### Executing runs ####
 
 ### Calculation of doses ###
