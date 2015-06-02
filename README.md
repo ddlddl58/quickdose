@@ -1,4 +1,4 @@
-# QuickLook (beta)#
+# QuickDose (beta)#
 
 Author: Radek Hofman
 
