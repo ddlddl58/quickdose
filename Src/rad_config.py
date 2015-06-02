@@ -11,7 +11,7 @@ import mods.coefficients.nuclide_data as DB
 ######################################################################################################
 
 #run directory
-TREE_PATH =   "/Volumes/SSD_/Users/panda/Krablak/nuclearrisk.info/QuickDose/Runs"
+TREE_PATH =   "/path/to/my/project"
 
 #static files path
 STATIC = TREE_PATH+os.sep+"Static"
@@ -20,7 +20,7 @@ STATIC = TREE_PATH+os.sep+"Static"
 TEMPLATES = TREE_PATH+os.sep+"Templates"
 
 #run name
-RUN = "Run_rad004"
+RUN = "Run_rad001"
 
 #number of particles
 PART_NUMBER = 100000
@@ -32,8 +32,8 @@ FP_DATE_FMT = "%Y%m%d%H%M%s"
 DATE_FORMAT = "%Y%m%d %H%M%S"
 
 #meteorological data
-METEO_PATH = "/Volumes/Panda/Users/hofmanr8/nuclearrisk.info/data/2015052700_1p00/"
-AVAILABLE = "/Volumes/Panda/Users/hofmanr8/nuclearrisk.info/data/2015052700_1p00/AVAILABLE"
+METEO_PATH = "/path/to/my/metfields/"
+AVAILABLE = "/path/to/my/metfields/AVAILABLE"
 
 #FLEXPART executable path for creating symlinks
 FLEXPART_NAME = "flexpart_gfs_gfort_1p0.out"
@@ -132,11 +132,11 @@ CLOUDSHINE_DIR = "Cloud_GDR"  # external gamma dose rate due to cloudshine (Sv/s
 GROUNDSHINE_DIR = "Ground_GDR"  # external gamma dose rate due to deposition (Sv/s)
 INHALATION_DIR = "Inhalation_GDR"  # internal irradiation due to inhalation (Sv/s)
 ALL_PATHWAYS_DIR = "All_pathways_GDR"  # dose rate from all pathways
-TIME_INTEGRATED_CONCENTRATION_DIR = "Time_int_conc"  # (Bq*s/m3)
-TIME_INTEGRATED_CLOUDSHINE_DIR = "Time_int_cloud"  # (Sv)
-TIME_INTEGRATED_GROUNDSHINE_DIR = "Time_int_ground"  # (Sv)
-TIME_INTEGRATED_INHALATION_DIR = "Time_int_inhalation"  # (Sv)
-TIME_INTEGRATED_ALL_PATHWAYS_DIR = "Time_int_all_pathways" # (Sv)
+#TIME_INTEGRATED_CONCENTRATION_DIR = "Time_int_conc"  # (Bq*s/m3)
+#TIME_INTEGRATED_CLOUDSHINE_DIR = "Time_int_cloud"  # (Sv)
+#TIME_INTEGRATED_GROUNDSHINE_DIR = "Time_int_ground"  # (Sv)
+#TIME_INTEGRATED_INHALATION_DIR = "Time_int_inhalation"  # (Sv)
+#TIME_INTEGRATED_ALL_PATHWAYS_DIR = "Time_int_all_pathways" # (Sv)
 
 ALL_NUCLIDES_IDENT = "all_nuclides"  # how to denote results summed over all nuclides?
 
