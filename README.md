@@ -18,6 +18,12 @@ Dose conversion coefficients for circa 70 nuclides and 5 age groups contained in
 
 Radiation Protection Bureau, Health Canada, Atomic Energy Control Board, Atomic Energy of Canada Limited: *Recommendations on Dose Coefficients for Assessing Doses from Accidental Radionuclide Releases to the Environment* (1999).
 
+These coefficients already implicitly assume following decay chains where parent and daughter products are in the secular equilibrium (daughters are short lived compared to parents):
+
+```
+Ru-106->Rh-106     Te-132->I-132     Cs-137->Ba-137m     Ce-144->Pr-144/144m
+```
+
 ## Prerequisites ##
 
 You need following to use QuickLook:
