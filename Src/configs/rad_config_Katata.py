@@ -5,7 +5,7 @@ import os
 import mods.coefficients.nuclide_data_dict as DB
 
 #run directory
-TREE_PATH =   "../Runs/"
+TREE_PATH =   "../Runs"
 
 #static files path
 STATIC = TREE_PATH+os.sep+"Static"

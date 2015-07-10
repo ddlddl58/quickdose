@@ -237,6 +237,8 @@ def make_tree(ST):
     print "Creating a new tree of runs..."
     os.makedirs(tree_path)
 
+    list_of_executables = []
+
     #building run tree in tree root
     for t, step in enumerate(sources):
 
@@ -290,6 +292,10 @@ def make_tree(ST):
             flex_src = rcf.FLEXPART_PATH
             flex_dst = release_path+os.sep+rcf.FLEXPART_NAME
             os.symlink(flex_src, flex_dst)
+            list_of_executables.append(flex_dst+"\n")
+
+    with open(os.path.join(tree_path,"run_list.txt"), "w+") as f0:
+        f0.writelines(list_of_executables)
 
 
 if __name__ == "__main__":
