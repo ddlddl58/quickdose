@@ -1,55 +1,6 @@
 # -*- coding: utf-8 -*-
 __author__ = 'radek hofman'
 
-"""
-DEFINITIONS OF DECAY CHAINS
-
-This should enable easy definition of decay chains for isotopes
-
-FORMAT:
-
-EXAMPLES:
-
-1. A nuclide where we assume 2 daughter isotopes
-"Nuclide-1": [(daughter1, fraction1), (daughter2, fraction2)]
-
-2. A nuclide where we assume just the decay, no ingrowth of daughter products
-"Nuclide-2": []
-
-For calculation of decay chains we use integration of Bateman's equation
-
-"""
-
-"""
-what we need for postprocessing:
-- a run probably with two species: one for noble gases, one for aerosol particles
-- a source term for all assumed nuclides
-- it will be calculated in a way that
- -- calculation of concentration at a grid point in some time and application of DECAY
- -- calculation of deposition at a grid point in some time and application of DECAY
-
-
-- What to calculate?
- -- 4D files of (3 spatial and 1 temporal dimension) of gamma dose rate from cloud
- -- 3D (2 spatial and 1 temporal dimension) of gamma dose rate from deposition
- -- time integrated concentration
- -- time integrated deposition
-"""
-
-
-"""
-- it will be just for forward run
-- where will be definition of source terms?
-"""
-
-
-"""
-Now I have to code code something which would take flexpart output for normalized releases,
-multiply it with some source terms and apply radioative decay and daughter nuclides ingrowth
-
-So I need a source term structure:
-
-"""
 
 import rad_config as rcf
 import os
@@ -57,7 +8,6 @@ import shutil
 import mods.tools
 from datetime import datetime as dt
 import datetime
-from genshi.template import TextTemplate
 
 FP_DATE_FMT = "%Y%m%d %H%M%S"  # flexpart date format
 
@@ -101,13 +51,23 @@ def create_levels_in_outgrid(levels):
     return ret
 
 
+def paste_into_template(template, dict_of_values):
+    """
+    pastes dict values into a template according to keys similarly to Genshi
+    """
+
+    for key in dict_of_values.keys():
+        template = template.replace("$"+key, str(dict_of_values[key]))
+
+    return template
+
 def create_outgrid_file(outgrid, outgrid_path):
     """
     creates outgrid file
     """
 
     with open(rcf.TEMPLATES+os.sep+'outgrid.tmpl', "r+") as f:
-        tmpl = TextTemplate(f.read())
+        s = f.read()
         d = {"outlonlower": "%10.2f" % outgrid["outlonlower"],
              "outlatleft": "%10.2f" % outgrid["outlatleft"],
              "numxgrid": "%d" % int(outgrid["numxgrid"]),
@@ -117,8 +77,7 @@ def create_outgrid_file(outgrid, outgrid_path):
              "levels": create_levels_in_outgrid(outgrid["levels"]),
              }
 
-        #passing the dictionary as key_words arguments
-        s = tmpl.generate(**d).render('text')
+        s = paste_into_template(s, d)
 
     #writing into file
     with open(outgrid_path, "w+") as f:
@@ -130,7 +89,7 @@ def create_outgrid_nest_file(outgrid_nest, outgrid_nest_path):
     """
 
     with open(rcf.TEMPLATES+os.sep+'outgrid_nest.tmpl', "r+") as f:
-        tmpl = TextTemplate(f.read())
+        s = f.read()
         d = {"outlonlower": "%10.2f" % outgrid_nest["outlonlower"],
              "outlatleft": "%10.2f" % outgrid_nest["outlatleft"],
              "numxgrid": "%d" % int(outgrid_nest["numxgrid"]),
@@ -139,8 +98,8 @@ def create_outgrid_nest_file(outgrid_nest, outgrid_nest_path):
              "dyoutlat": "%10.2f" % outgrid_nest["dyoutlat"]
              }
 
-        #passing the dictionary as key_words arguments
-        s = tmpl.generate(**d).render('text')
+        s = paste_into_template(s, d)
+
 
     #writing into file
     with open(outgrid_nest_path, "w+") as f:
@@ -154,15 +113,15 @@ def create_command_file(this_rel_start, calc_end, time_step_length, t_average, c
 
     #using command file template from templates directory
     with open(rcf.TEMPLATES+os.sep+'command.tmpl', "r+") as f:
-        tmpl = TextTemplate(f.read())
+        s = f.read()
         d = {"simul_start": mods.tools.make_flexpart_date(this_rel_start),
              "simul_end": mods.tools.make_flexpart_date(calc_end),
              "time_step": str(time_step_length),
              "t_average": str(t_average)
              }
 
-        #passing the dictionary as key_words arguments
-        s = tmpl.generate(**d).render('text')
+        s = paste_into_template(s, d)
+
 
     #writing into file
     with open(comm_path, "w+") as f:
@@ -209,7 +168,7 @@ def create_release_file(source, spec_dict, this_rel_start, this_rel_end, t, n, r
 
     #using command file template from templates directory
     with open(rcf.TEMPLATES+os.sep+'releases_universal.tmpl', "r+") as f:
-        tmpl = TextTemplate(f.read())
+        s = f.read()
         d = {"spec_no": spec_no,
              "specs": specs,
              "rel_start": this_rel_start.strftime(FP_DATE_FMT),
@@ -225,8 +184,7 @@ def create_release_file(source, spec_dict, this_rel_start, this_rel_end, t, n, r
              "comment": "time %4.4d source %4.4d" % (t, n)
              }
 
-        #passing the dictionary as key_words arguments
-        s = tmpl.generate(**d).render('text')
+        s = paste_into_template(s, d)
 
     #writing into file
     with open(rel_path, "w+") as f:

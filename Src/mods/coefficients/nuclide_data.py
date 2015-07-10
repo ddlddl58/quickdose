@@ -21,6 +21,8 @@ d = {
 'I-125': {'halflife': 5192640.0, 'inhalation': (2e-08, 2.3e-08, 1.5e-08, 1.1e-08, 7.2e-09, 5.1e-09), 'cloud': 3.73e-16, 'ground': 3.14e-17},
 'I-129': {'halflife': 4.951152e+14, 'inhalation': (7.2e-08, 8.6e-08, 6.1e-08, 6.7e-08, 4.6e-08, 3.6e-08), 'cloud': 2.81e-16, 'ground': 1.95e-17},
 'I-131': {'halflife': 694656.0, 'inhalation': (7.2e-08, 7.2e-08, 3.7e-08, 1.9e-08, 1.1e-08, 7.4e-09), 'cloud': 1.69e-14, 'ground': 3.64e-16},
+#entry for gaseous iodine identical to I-131 entry
+'I-131g': {'halflife': 694656.0, 'inhalation': (7.2e-08, 7.2e-08, 3.7e-08, 1.9e-08, 1.1e-08, 7.4e-09), 'cloud': 1.69e-14, 'ground': 3.64e-16},
 'I-132': {'halflife': 8280.0, 'inhalation': (1.1e-09, 9.6e-10, 4.5e-10, 2.2e-10, 1.3e-10, 9.4e-11), 'cloud': 1.05e-13, 'ground': 2.2e-15},
 'I-133': {'halflife': 74880.0, 'inhalation': (1.9e-08, 1.8e-08, 8.3e-09, 3.8e-09, 2.2e-09, 1.5e-09), 'cloud': 2.76e-14, 'ground': 6.17e-16},
 'I-134': {'halflife': 3153.6, 'inhalation': (4.6e-10, 3.7e-10, 1.8e-10, 9.7e-11, 5.9e-11, 4.5e-11), 'cloud': 1.22e-13, 'ground': 2.53e-15},
