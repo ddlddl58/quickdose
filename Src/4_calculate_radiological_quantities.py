@@ -59,7 +59,7 @@ def calc_dose_rates(ST, NUC_DB, BR):
     dose rates are stored in one array GDR
 
     GDR = numpy.zeros((nuclide_count, 3, dimx, dimy, total_steps_no))
-    # 0 - cloudshine, 1 - groundshine, 2 - deposition
+    # 0 - cloudshine, 1 - groundshine, 2 - inhalation
     """
 
     #domain related data which we save along with data
@@ -84,6 +84,9 @@ def calc_dose_rates(ST, NUC_DB, BR):
     nuclides_all = ST["sources"][0][0]["inventory"].keys()
     ncount = len(nuclides_all)  # nuclides count
 
+    #weighting factor for equivalent dose to thyroid
+    thyro_dose_weight = NUC_DB.thyro_dose_weight
+
     #common field for all nuclides and GDR types
     # 0 - cloudshine, 1 - groundshine, 2 - inhalation
     GDR = numpy.zeros((ncount, 3, total_steps_no, dimx, dimy))
@@ -91,7 +94,7 @@ def calc_dose_rates(ST, NUC_DB, BR):
     #correction factor for cloudshine and groundshine for the first two agegroups
     corr_fact = 1.0
     if age_group < 2:
-        corr_fact = 1.5
+        corr_fact = 1.5  # for the first two age groups we multiply with 1.5
 
     print "Calculatinng doses"
     logging.info("Calculatinng doses")
@@ -169,10 +172,54 @@ def calc_dose_rates(ST, NUC_DB, BR):
     return GDR
 
 
-def calc_doses():
+def calc_doses(GDR, ST, NUC_DB):
     """
     time integration of GDR
+
+    all gamma dose rates are in GDR array
+
+    GDR = numpy.zeros((nuclides_count, 3, total_steps_no, dimx, dimy))
+
+    # 0 - cloudshine, 1 - groundshine, 2 - inhalation
+
+    endpoints from flexRISK:
+
+    - Thyroid dose from inhalation of iodine and tellurium isotopes during 7 d of exposure (mSv) – relevant for administration of stable iodine
+    - Effective dose for 7 d of exposure, all nuclides and (considered) pathways (mSv) – relevant for sheltering.
+    - Effective dose for 30 d of exposure, all nuclides, only groundshine (mSv) – relevant for temporary relocation of population.
+    - Effective dose for 1 a of exposure, all (considered) pathways (mSv) – relevant for comparison with general radiation protection guidelines.
     """
+
+    #domain related data which we save along with data
+    domain = rcf.DOMAIN
+    outgrids = (ST["outgrid"], ST["outgrid_nest"])
+    dimx = int(outgrids[domain]["numxgrid"])
+    dimy = int(outgrids[domain]["numygrid"])
+    #we do not need dimz, we always use the ground level
+
+    #preparing time constants
+    DATE_FMT = rcf.DATE_FORMAT
+    calc_start = dt.strptime(ST["calc_start"], DATE_FMT)  # here assumed to conicide with end of chain reaction
+    calc_end = dt.strptime(ST["calc_end"], DATE_FMT)
+    time_step_length = ST["time_step"]
+    calc_dur = (calc_end - calc_start)
+    total_steps_no = int((calc_dur.days * 24 * 3600 + calc_dur.seconds )/time_step_length)
+
+    #which age group do we want?
+    age_group = ST["age_group"]
+
+    #which nuclides do we have?
+    nuclides_all = ST["sources"][0][0]["inventory"].keys()
+    ncount = len(nuclides_all)  # nuclides count
+
+    #field containing doses
+    TI_GDR = numpy.zeros((ncount, 4))
+
+    #thyroid dose
+    thyro_dose_weight = NUC_DB.thyro_dose_weight  # weighting factor for thyroid dose
+
+
+
 
 if __name__ == "__main__":
     #so, let's calculate some derived radiological quantities, cho cho cho!
@@ -182,7 +229,7 @@ if __name__ == "__main__":
     #we calculate and save gamma dose rates
     GDR = calc_dose_rates(ST, NUC_DB, BREATHING_RATE)
     #now we can integrate gamma dose rates to obtain some doses
-    calc_doses(GDR, ST, NUC_DB, BREATHING_RATE)
+    calc_doses(GDR, ST, NUC_DB)
 
 
 
