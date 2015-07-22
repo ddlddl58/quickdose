@@ -98,7 +98,7 @@ def calculate_decay(ST, NUC_DB):
             #for each source we have gridded output in all time steps because
             #all can have a contribution from this release slot
 
-            print INFO+"    Processing source term %d in time %d" % (n, t)
+            print INFO+"    Processing source term %d in time %d offset=%d" % (n, t, steps_offset)
             logging.info("    Processing source term %d in time %d" % (n, t))
 
             release_path = rcf.TREE_PATH+rcf.RUN+os.sep+mods.tools.get_run_name(t, n)
@@ -129,6 +129,7 @@ def calculate_decay(ST, NUC_DB):
             #iteration over time steps of output
             for s in range(this_rel_steps_no):
                 #we add offset to not iterate over outputs BEFORE the release
+                s0 = s + steps_offset  # index to result field 
                 curr_output_end = calc_start + (steps_offset+s+1)*delta_step  # +1 to have the end interval
                 curr_output_end_str = dt.strftime(curr_output_end, files_fmt)
 
@@ -162,19 +163,18 @@ def calculate_decay(ST, NUC_DB):
                         lamb = mods.rad_methods.get_lambda(halflife)  # decay constant in seconds, everything is in seconds
 
                         raddecay = mods.rad_methods.decay(t1, t2, lamb)
-
                         ###print nuc, lamb, s+steps_offset, raddecay, t1, t2
 
                         release = inventory[nuc][0]
-
+                        
                         #we apply FP_SCALING = Flexpart scaling 1e-12
                         #this will give us an AVERAGE concentration over the time step including decay!
                         #we have the same basic product fields for releases at all times
-                        basic_products[nuc]["conc"][s,:,:,:] += grid[:,:,:,0,0] * raddecay * release * FP_SCALING
+                        basic_products[nuc]["conc"][s0,:,:,:] += grid[:,:,:,0,0] * raddecay * release * FP_SCALING
 
                         #the same for deposition, noble gases are ignored
                         #if NUC_DB[nuc]['ground'] != -999: - commented now, it is zero anyway for NG
-                        basic_products[nuc]["depo"][s,:,:] += total_depo * raddecay * release * FP_SCALING
+                        basic_products[nuc]["depo"][s0,:,:] += total_depo * raddecay * release * FP_SCALING
 
                     #and now produce possible daughter nuclide from parent nuclides
                     logging.debug("   Applying decay Chains:")
@@ -192,11 +192,11 @@ def calculate_decay(ST, NUC_DB):
                             #decay of parent into daughter
                             raddecay_p2d = mods.rad_methods.decay_2(t1, t2, lamb_p, lamb_d, branch)
                             release_p = inventory[pnuc][0] * raddecay_p2d
-                            basic_products[dnuc]["conc"][s,:,:,:] += grid[:,:,:,0,0] * release_p * FP_SCALING
+                            basic_products[dnuc]["conc"][s0,:,:,:] += grid[:,:,:,0,0] * release_p * FP_SCALING
 
                             #we do not do production of noble gas daughters for noble gases
                             if NUC_DB[dnuc]['ground'] != -999:  # this is how we recognize NGs
-                                basic_products[dnuc]["depo"][s,:,:] += total_depo * release_p * FP_SCALING
+                                basic_products[dnuc]["depo"][s0,:,:] += total_depo * release_p * FP_SCALING
 
                             #NOTE: pnuc decays in the section above, the same with already existing daughter nuclides
 
