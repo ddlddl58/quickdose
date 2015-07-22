@@ -184,7 +184,7 @@ def calc_doses(GDR, ST, NUC_DB):
 
     endpoints from flexRISK:
 
-    - Thyroid dose from inhalation of iodine and tellurium isotopes during 7 d of exposure (mSv) – relevant for administration of stable iodine
+    - NOT YET: Thyroid dose from inhalation of iodine and tellurium isotopes during 7 d of exposure (mSv) – relevant for administration of stable iodine
     - Effective dose for 7 d of exposure, all nuclides and (considered) pathways (mSv) – relevant for sheltering.
     - Effective dose for 30 d of exposure, all nuclides, only groundshine (mSv) – relevant for temporary relocation of population.
     - Effective dose for 1 a of exposure, all (considered) pathways (mSv) – relevant for comparison with general radiation protection guidelines.
@@ -212,11 +212,11 @@ def calc_doses(GDR, ST, NUC_DB):
     nuclides_all = ST["sources"][0][0]["inventory"].keys()
     ncount = len(nuclides_all)  # nuclides count
 
-    #field containing doses
-    TI_GDR = numpy.zeros((ncount, 4))
+    #field containing doses..to be done
+    #TI_GDR = numpy.zeros((ncount, 4))
 
     #thyroid dose
-    thyro_dose_weight = NUC_DB.thyro_dose_weight  # weighting factor for thyroid dose
+    #thyro_dose_weight = NUC_DB.thyro_dose_weight  # weighting factor for thyroid dose
 
 
 
