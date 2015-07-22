@@ -103,6 +103,7 @@ def calculate_decay(ST, NUC_DB):
 
             release_path = rcf.TREE_PATH+rcf.RUN+os.sep+mods.tools.get_run_name(t, n)
             output_path = release_path+os.sep+"Output"
+            print output_path
             header = mods.read_header.read_header(output_path, nested=domain)
 
             inventory = source["inventory"]

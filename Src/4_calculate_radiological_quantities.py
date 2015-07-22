@@ -85,7 +85,7 @@ def calc_dose_rates(ST, NUC_DB, BR):
     ncount = len(nuclides_all)  # nuclides count
 
     #weighting factor for equivalent dose to thyroid
-    thyro_dose_weight = NUC_DB.thyro_dose_weight
+    #thyro_dose_weight = NUC_DB.thyro_dose_weight
 
     #common field for all nuclides and GDR types
     # 0 - cloudshine, 1 - groundshine, 2 - inhalation
@@ -229,7 +229,7 @@ if __name__ == "__main__":
     #we calculate and save gamma dose rates
     GDR = calc_dose_rates(ST, NUC_DB, BREATHING_RATE)
     #now we can integrate gamma dose rates to obtain some doses
-    calc_doses(GDR, ST, NUC_DB)
+    #calc_doses(GDR, ST, NUC_DB)
 
 
 
