@@ -27,7 +27,7 @@ METEO_PATH = "/stradi/ecmwf-tools/data/20110311_20110601-0p5/"
 AVAILABLE =  "/stradi/ecmwf-tools/data/20110311_20110601-0p5/AVAILABLE" #"/Users/jezisek/nuclearrisk.info/FLEXPART/GFS/2015050700_1p00/AVAILABLE"
 
 #FLEXPART executable path for creating symlinks
-FLEXPART_NAME = "flexpart_gfs_0p5.out"
+FLEXPART_NAME = "flexpart_gfs_1p0.out"
 FLEXPART_PATH = TREE_PATH+os.sep+"Flexpart"+os.sep+FLEXPART_NAME
 
 #coordinates of the source

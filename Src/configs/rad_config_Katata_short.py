@@ -5,7 +5,7 @@ import os
 import mods.coefficients.nuclide_data as DB
 
 #run directory
-TREE_PATH =   "../Runs"
+TREE_PATH =   "/stradi/Runs/Fukushima/quickdose/Runs/"
 
 #static files path
 STATIC = TREE_PATH+os.sep+"Static"
@@ -14,7 +14,7 @@ STATIC = TREE_PATH+os.sep+"Static"
 TEMPLATES = TREE_PATH+os.sep+"Templates"
 
 #run name
-RUN = "Run_Katata_01"
+RUN = "Run_Katata_02_short"
 
 #number of particles per hour
 PART_NUMBER = 10000
@@ -27,7 +27,7 @@ METEO_PATH = "/stradi/ecmwf-tools/data/20110311_20110601-0p5/"
 AVAILABLE =  "/stradi/ecmwf-tools/data/20110311_20110601-0p5/AVAILABLE" #"/Users/jezisek/nuclearrisk.info/FLEXPART/GFS/2015050700_1p00/AVAILABLE"
 
 #FLEXPART executable path for creating symlinks
-FLEXPART_NAME = "flexpart_gfs_1p0.out"
+FLEXPART_NAME = "flexpart_gfs_0p5_x86_64.out"
 FLEXPART_PATH = TREE_PATH+os.sep+"Flexpart"+os.sep+FLEXPART_NAME
 
 #coordinates of the source
