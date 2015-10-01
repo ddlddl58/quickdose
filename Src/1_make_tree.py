@@ -43,7 +43,7 @@ def create_levels_in_outgrid(levels):
 
     for i, level in enumerate(levels):
         ret += """10. -----.-           4X, F7.1
-      %10.2f
+  %10.2f
     LEVEL %d           HEIGHT OF LEVEL (UPPER BOUNDARY)
 
 """ % (level, i+1)
