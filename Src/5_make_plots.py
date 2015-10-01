@@ -171,41 +171,46 @@ def plot_field(path, image_outpath, unitlabel, product_name):
                 if pcf.DO_OVERLAY:
                     ax.clear()
 
-                """ # huuuuge SVGs :(
-                c1 = map.pcolormesh(x, y, data,
-                                  #shading='gouraud',
+                if pcf.PLOT_METHOD == "pcolormesh":
+                    # huuuuge SVGs :(
+                    c1 = map.pcolormesh(x, y, data,
+                                      #shading='gouraud',
+                                      norm=LogNorm(vmin=levels[0], vmax=levels[-1]),
+                                      cmap=pcf.C_MAP,
+                                      alpha=pcf.ALPHA)
+
+                elif pcf.PLOT_METHOD == "contourf":
+
+                    c1 = map.contourf(x, y, data,
+                                      #shading='gouraud',
+                                      levels = levels,
+                                      norm=LogNorm(vmin=levels[0], vmax=levels[-1]),
+                                      cmap=pcf.C_MAP,
+                                      alpha=pcf.ALPHA)
+
+                    """
+                    c1 = map.contour(x, y, data,
+                                      #shading='gouraud',
+                                      levels = levels,
+                                      norm=LogNorm(vmin=levels[0], vmax=levels[-1]),
+                                      cmap=pcf.C_MAP,
+                                      alpha=1.0)
+                    """
+                elif pcf.PLOT_METHOD == "imshow":
+                    if pcf.PROJECTION != "cyl":
+                        raise("Cannot be used with mercator projection, uniform grid does not fit")
+                    else:
+                        outlon0m, outlat0m = map(outlon0, outlat0)
+                        outlon1m, outlat1m = map(outlon1, outlat1)
+
+                        c1 = map.imshow(data,
+                                  interpolation='nearest',
+                                  extent=(outlon0m, outlon1m, outlat0m, outlat1m),
+                                  origin='lower',
                                   norm=LogNorm(vmin=levels[0], vmax=levels[-1]),
                                   cmap=pcf.C_MAP,
                                   alpha=pcf.ALPHA)
 
-                """
-                c1 = map.contourf(x, y, data,
-                                  #shading='gouraud',
-                                  levels = levels,
-                                  norm=LogNorm(vmin=levels[0], vmax=levels[-1]),
-                                  cmap=pcf.C_MAP,
-                                  alpha=pcf.ALPHA)
-
-                """
-                c1 = map.contour(x, y, data,
-                                  #shading='gouraud',
-                                  levels = levels,
-                                  norm=LogNorm(vmin=levels[0], vmax=levels[-1]),
-                                  cmap=pcf.C_MAP,
-                                  alpha=1.0)
-                """
-                """ # cannot be used with mercator, uniform grid does not fit
-                outlon0m, outlat0m = map(outlon0, outlat0)
-                outlon1m, outlat1m = map(outlon1, outlat1)
-
-                c1 = map.imshow(data,
-                          interpolation='nearest',
-                          extent=(outlon0m, outlon1m, outlat0m, outlat1m),
-                          origin='lower',
-                          norm=LogNorm(vmin=levels[0], vmax=levels[-1]),
-                          cmap=pcf.C_MAP,
-                          alpha=pcf.ALPHA)
-                """
 
                 if not pcf.DO_OVERLAY:
                     cbar = map.colorbar(c1, location="bottom", pad="7%")
@@ -277,8 +282,8 @@ def plot_results():
                 rcf.IMAGES_PATH+os.sep+rcf.INHALATION_DIR,
                 rcf.IMAGES_PATH+os.sep+rcf.ALL_PATHWAYS_DIR,)
 
-    unitlabels = (r"$Bq/m$^3$",
-                  r"$Bq/m$^2$",
+    unitlabels = (r"$Bq/m^3$",
+                  r"$Bq/m^2$",
                   r"$Sv/s$",
                   r"$Sv/s$",
                   r"$Sv/s$",
